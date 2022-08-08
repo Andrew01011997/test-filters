@@ -1,5 +1,7 @@
+import { DefinitionOperator } from "./definition";
+
 export interface Condition {
     definitionId: string;
-    operator: string | "eq";
+    operator: DefinitionOperator;
     value: string | number | Date;
 }

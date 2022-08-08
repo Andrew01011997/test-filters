@@ -1,5 +1,7 @@
+import { ResponseStatus } from "./response";
+
 interface ResponseError<Fields extends Record<string, any> = Record<string, any>> {
-    status: string | "bad_request";
+    status: ResponseStatus;
     error: string;
     fieldErrors: Record<keyof Fields, string>;
 }

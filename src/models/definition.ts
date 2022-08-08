@@ -19,4 +19,5 @@ interface Definition {
     defaultValue: null;
 }
 
-export type { Definition, DefinitionType, DefinitionOperator }
+export type { Definition }
+export {  DefinitionType, DefinitionOperator }
