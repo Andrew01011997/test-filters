@@ -4,7 +4,7 @@ const enum ResponseStatus {
 }
 
 interface SingleResponse<T> {
-    status: ResponseStatus;
+    status: ResponseStatus.SUCCESS;
     data: T;
 }
 
