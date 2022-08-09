@@ -21,15 +21,15 @@ class Api {
     }
 
     createFilter(body: FilterWithoutId) {
-        return this.client.post<SingleResponse<Filter>, ResponseError<Filter>>('filters', body)
+        return this.client.post<SingleResponse<Filter> | ResponseError<Filter>>('filters', body)
     }
 
     getFilter(id: Get<Filter, "id">) {
-        this.client.get<SingleResponse<Filter>>(`filters/${id}`)
+        return this.client.get<SingleResponse<Filter>>(`filters/${id}`)
     }
 
     updateFilter(filter: Filter) {
-        this.client.put<SingleResponse<Filter>, ResponseError<Filter>>(`filters/${filter.id}`, filter)
+        return this.client.put<SingleResponse<Filter> | ResponseError<Filter>>(`filters/${filter.id}`, filter)
     }
 }
 
