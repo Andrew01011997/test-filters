@@ -10,7 +10,7 @@ const getFiltersAsync = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         const response = await api.getFilters()
 
-        if(response.data.status !== ResponseStatus.SUCCESS)
+        if (response.data.status !== ResponseStatus.SUCCESS)
             return rejectWithValue(response.data)
 
         return response.data.data
@@ -22,7 +22,7 @@ const createFilterAsync = createAsyncThunk(
     async (data: FilterWithoutId, { rejectWithValue }) => {
         const response = await api.createFilter(data)
 
-        if(response.data.status !== ResponseStatus.SUCCESS)
+        if (response.data.status !== ResponseStatus.SUCCESS)
             return rejectWithValue(response.data)
 
         return response.data.data
@@ -34,11 +34,29 @@ const getFilterByIdAsync = createAsyncThunk(
     async (id: Get<Filter, "id">, { rejectWithValue }) => {
         const response = await api.getFilter(id)
 
-        if(response.data.status !== ResponseStatus.SUCCESS)
+        if (response.data.status !== ResponseStatus.SUCCESS)
             return rejectWithValue(response.data)
 
         return response.data.data
     }
 )
 
-export { FILTERS_SLICE_NAME, getFiltersAsync, createFilterAsync, getFilterByIdAsync }
+const updateFilterAsync = createAsyncThunk(
+    `${FILTERS_SLICE_NAME}/updateFilterAsync`,
+    async (data: Filter, { rejectWithValue }) => {
+        const response = await api.updateFilter(data)
+
+        if (response.data.status !== ResponseStatus.SUCCESS)
+            return rejectWithValue(response.data)
+
+        return response.data.data
+    }
+)
+
+export {
+    FILTERS_SLICE_NAME,
+    getFiltersAsync,
+    createFilterAsync,
+    getFilterByIdAsync,
+    updateFilterAsync
+}
