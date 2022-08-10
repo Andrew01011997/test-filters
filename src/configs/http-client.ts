@@ -2,11 +2,12 @@ import axios from 'axios'
 import { camelizeInterceptor } from '../interceptors/camelize'
 import { decamelizeInterceptor } from '../interceptors/decamelize'
 
-const { API_URL } = process.env
-
 const httpClient = axios.create({
-    baseURL: API_URL,
+    baseURL: 'http://localhost:3000',
     timeout: 0,
+    headers: {
+        'Content-Type': 'application/json',
+    }
 })
 
 /**
