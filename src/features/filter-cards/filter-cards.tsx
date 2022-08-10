@@ -1,5 +1,7 @@
 import { useCallback } from "react";
 import { Filter } from "../../models/filter";
+import { setEditId } from "../../modules/edit/actions";
+import { useAppDispatch } from "../../modules/store";
 import { FilterCard } from "./filter-card";
 
 interface Props {
@@ -7,9 +9,11 @@ interface Props {
 }
 
 export function FilterCards({ items }: Props) {
+    const dispatch = useAppDispatch()
+    
     const onClickEdit = useCallback((id: Get<Filter, 'id'>) => {
-        // set to store edit id
-    }, [])
+        dispatch(setEditId(id))
+    }, [dispatch])
 
     return (
         <div className="flex flex-col gap-2 w-full">

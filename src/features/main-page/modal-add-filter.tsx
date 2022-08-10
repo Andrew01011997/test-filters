@@ -1,16 +1,12 @@
-import { useFormik, FormikProvider, FieldArray } from 'formik'
-import { useCallback, useState } from 'react';
+import { useFormik, FormikProvider, FormikHelpers } from 'formik'
+import { useCallback, useEffect, useState } from 'react';
 import { Button } from "../../components/button/button";
-import { InputField } from '../../components/input/input-field';
 import { Modal } from "../../components/modal/modal";
-import { SelectField } from "../../components/select/select-field";
-import { useDefinitions } from "../../hooks/use-definitions";
 import { Filter, FilterWithoutId } from '../../models/filter';
+import { removeEditId } from '../../modules/edit/actions';
 import { createFilterAsync, updateFilterAsync } from '../../modules/filters/actions';
 import { useAppDispatch } from '../../modules/store';
-import { makeOptions } from "../../utils/make-options";
-import { DefinitionOperatorValue } from './definition-operator-value/definition-operator-value';
-import { DefinitionOperatorsSelect } from './definition-operators-select';
+import { ModalAddFilterForm } from './modal-add-filter-form';
 
 type Condition = Partial<Get<FilterWithoutId, 'conditions'>[number]>
 
@@ -29,62 +25,60 @@ interface Props {
 
 export function ModalAddFilter({ isOpen, onClose, editFilter }: Props) {
     const dispatch = useAppDispatch()
-    const definitions = useDefinitions()
-    const [initialValues, setInitialValues] = useState(editFilter ?? { name: "", conditions: [INITIAL_CONDITION] })
+    const [initialValues, setInitialValues] = useState({ name: "", conditions: [INITIAL_CONDITION] })
+
+    const onSubmit = useCallback((values: Values, helpers: FormikHelpers<Values>) => {
+        let dispatchedAction;
+        if(editFilter !== undefined){
+            dispatchedAction = dispatch(updateFilterAsync({...editFilter, ...values} as Filter))
+        }
+        dispatchedAction = dispatch(createFilterAsync(values as FilterWithoutId))
+
+        dispatchedAction
+            .unwrap()
+            .then(() => {
+                onClose();
+                helpers.resetForm({ values: { name: "", conditions: [INITIAL_CONDITION] } })
+                if(editFilter !== undefined){
+                    dispatch(removeEditId())
+                }
+            })
+    }, [editFilter, dispatch, onClose])
 
     const formik = useFormik<Values>({
         initialValues,
         enableReinitialize: true,
-        onSubmit: (val, helpers) => {
-            let dispatchedAction;
-            if(editFilter !== undefined){
-                dispatchedAction = dispatch(updateFilterAsync({...editFilter, ...val} as Filter))
-            }
-            dispatchedAction = dispatch(createFilterAsync(val as FilterWithoutId))
-
-            dispatchedAction
-                .unwrap()
-                .then(() => {
-                    onClose();
-                    helpers.resetForm({ values: { name: "", conditions: [INITIAL_CONDITION] } })
-                })
-        }
+        onSubmit
     })
 
     function onAddCondition() {
         setInitialValues({ ...formik.values, conditions: [...formik.values.conditions, INITIAL_CONDITION] })
     }
 
-    const handleCLose = useCallback(() => {
+    const handleClose = useCallback(() => {
         formik.resetForm({ values: { name: "", conditions: [INITIAL_CONDITION] } })
         onClose()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [onClose, formik.resetForm])
 
+    const handleRemoveCondition = useCallback((idx: number) => {
+        const prev = formik.values
+        setInitialValues({...prev, conditions: prev.conditions.filter((_, index) => idx !== index) })
+    }, [formik.values, setInitialValues])
+
+    useEffect(() => {
+        if(editFilter){
+            setInitialValues(editFilter)
+        }
+    }, [editFilter])
+
     return (
-        <Modal isOpen={isOpen} onClose={handleCLose}>
+        <Modal isOpen={isOpen} onClose={handleClose}>
             <div className="flex flex-row justify-end">
                 <Button onClick={formik.submitForm}>Save</Button>
             </div>
             <FormikProvider value={formik}>
-                <InputField name="name" label="Name" className='flex-1' />
-                <FieldArray
-                    name="friends"
-                    render={() =>
-                        formik.values.conditions.map((_, idx) =>
-                        (
-                            <div key={idx} className="border-t border-gray-700/25 mt-4 pt-4">
-                                <SelectField
-                                    name={`conditions.${idx}.definitionId`}
-                                    label="Condition Type"
-                                    options={makeOptions(definitions ?? [])}
-                                />
-                                <DefinitionOperatorsSelect index={idx} />
-                                <DefinitionOperatorValue index={idx} />
-                            </div>
-                        ))}
-                />
-
+               <ModalAddFilterForm onRemoveCondition={handleRemoveCondition} />
             </FormikProvider>
             <div className="flex flex-row justify-center mt-9">
                 <Button onClick={onAddCondition}>Add one more condition</Button>

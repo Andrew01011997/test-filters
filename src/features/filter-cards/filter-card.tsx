@@ -1,5 +1,6 @@
 import { Dispatch } from "react";
 import { Filter } from "../../models/filter";
+import { HumanReadableConditions } from "./human-readable-conditions";
 
 interface Props {
     item: Filter;
@@ -8,10 +9,10 @@ interface Props {
 
 export function FilterCard({ item, onClickEdit }: Props) {
     return (
-        <div className="rounded-xl border border-gray-500 p-3 flex flex-col gap-2">
+        <div className="rounded-xl border border-gray-500 p-3 flex flex-col gap-2" onClick={() => onClickEdit(item.id)}>
             <span>id: {item.id}</span>
             <span>name: {item.name}</span>
-            <span>{JSON.stringify(item.conditions, null, '\t')}</span>
+            <HumanReadableConditions conditions={item.conditions} />
         </div>
     )
 }

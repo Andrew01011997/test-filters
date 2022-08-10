@@ -3,14 +3,17 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 import { DEFINTIONS_SLICE_NAME } from "./definitions/actions";
 import { FILTERS_SLICE_NAME } from "./filters/actions";
+import { EDIT_SLICE_NAME } from "./edit/actions";
 
 import definitions from './definitions/slice'
 import filters from './filters/slice'
+import edit from './edit/slice'
 
 export const store = configureStore({
     reducer: combineReducers({
         [DEFINTIONS_SLICE_NAME]: definitions,
-        [FILTERS_SLICE_NAME]: filters
+        [FILTERS_SLICE_NAME]: filters,
+        [EDIT_SLICE_NAME]: edit
     })
 })
 

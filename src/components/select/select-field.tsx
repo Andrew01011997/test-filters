@@ -9,7 +9,9 @@ interface Props extends PropsOf<typeof Select> {
 export function SelectField({ name, ...props }: Props) {
     const [{ value }, , { setValue }] = useField(name)
 
-    const selectedOpetion = useMemo(() => {
+    console.log(name, value)
+
+    const selectedOption = useMemo(() => {
         if (value && props.options?.length) {
             return props.options.find(opt => (opt as { value: string | number }).value === value)
         }
@@ -19,7 +21,8 @@ export function SelectField({ name, ...props }: Props) {
     return (
         <Select
             {...props}
-            value={selectedOpetion}
+            value={selectedOption}
+            defaultValue={selectedOption}
             onChange={(opt: unknown) => setValue((opt as { value: string | number })?.value ?? null)}
         />
     )
