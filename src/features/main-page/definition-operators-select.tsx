@@ -18,17 +18,17 @@ interface Props {
     index: number;
 }
 
-export function DefinitionOperatorsSelect({ index }: Props){
-    const [{ value }] = useField(`conditions.${index}.${definitionName}`)
-    const definition = useAppSelector(selectDefinitionById(value))
+export function DefinitionOperatorsSelect({ index }: Props) {
+    const [{ value: definitionValue }] = useField(`conditions.${index}.${definitionName}`)
+    const definition = useAppSelector(selectDefinitionById(definitionValue))
 
     const options = useMemo(() => {
-        if(definition) {
+        if (definition) {
             return definition.operators.map(op => ({ value: op, label: OPERATORS[op] }))
         }
     }, [definition])
 
-    if(!options)
+    if (!options)
         return null
 
     return <SelectField name={`conditions.${index}.operator`} label="Operation" options={options} />

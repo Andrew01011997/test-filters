@@ -18,7 +18,9 @@ export function ModalAddFilterForm({ onRemoveCondition }: Props) {
 
     return (
         <>
-            <InputField name="name" label="Name" className='flex-1' />
+            <div className='pt-5'>
+                <InputField name="name" label="Name" className='flex-1 mx-0' /> 
+            </div>
             <FieldArray
                 name="friends"
                 render={() =>

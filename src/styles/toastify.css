@@ -1,0 +1,13 @@
+@import "react-toastify/dist/ReactToastify.min.css";
+:root {
+    --toastify-color-success: rgb(74 222 128);
+    --toastify-color-error: rgb(248 113 113);
+}
+
+.Toastify__toast-body {
+    @apply font-bold;
+}
+
+.Toastify__toast {
+    @apply rounded-md shadow-md;
+}

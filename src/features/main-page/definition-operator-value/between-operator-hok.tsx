@@ -13,9 +13,9 @@ export function betweenHOK(type: DefinitionType) {
     return ({ name, ...props }: PropsOf<typeof Component>) => {
 
         return (
-            <div className="flex flex-row gap-2 w-full">
-                <Component {...props} name={`${name}.0`} />
-                <Component {...props} name={`${name}.1`} />
+            <div className="grid grid-cols-2 gap-2 w-full">
+                <Component {...props} name={`${name}.0`} label="From" />
+                <Component {...props} name={`${name}.1`} label="To" />
             </div>
         )
     }

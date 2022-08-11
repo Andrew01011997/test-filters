@@ -1,15 +1,17 @@
-import { Provider } from 'react-redux';
 import { MainPage } from './features/main-page/main-page';
-import { store } from './modules/store';
+import { NotificationProvider } from './providers/notification';
+import { StoreProvider } from './providers/store';
 
 import './styles/index.css'
 
 function App() {
 
   return (
-    <Provider store={store}>
-      <MainPage />
-    </Provider>
+    <NotificationProvider>
+      <StoreProvider>
+        <MainPage />
+      </StoreProvider>
+    </NotificationProvider>
   );
 }
 

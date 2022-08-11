@@ -4,7 +4,9 @@ import { createFilterAsync, getFilterByIdAsync, getFiltersAsync, updateFilterAsy
 
 interface FiltersState extends EntityState<Filter> { }
 
-const filtersAdapter = createEntityAdapter<Filter>()
+const filtersAdapter = createEntityAdapter<Filter>({
+    sortComparer: (a, b) => a.name > b.name ? 1 : -1
+})
 
 function getFiltersAsyncReducer(builder: ActionReducerMapBuilder<FiltersState>) {
     builder.addCase(getFiltersAsync.fulfilled, filtersAdapter.upsertMany);
@@ -14,7 +16,7 @@ function createFilterAsyncReducer(builder: ActionReducerMapBuilder<FiltersState>
     builder.addCase(createFilterAsync.fulfilled, filtersAdapter.upsertOne)
 }
 
-function getFilterByIdAsyncReducer(builder: ActionReducerMapBuilder<FiltersState>){
+function getFilterByIdAsyncReducer(builder: ActionReducerMapBuilder<FiltersState>) {
     builder.addCase(getFilterByIdAsync.fulfilled, filtersAdapter.upsertOne)
 }
 
@@ -23,10 +25,10 @@ function updateFilterAsyncReducer(buildser: ActionReducerMapBuilder<FiltersState
 }
 
 export type { FiltersState }
-export { 
-    filtersAdapter, 
-    getFiltersAsyncReducer, 
-    createFilterAsyncReducer, 
+export {
+    filtersAdapter,
+    getFiltersAsyncReducer,
+    createFilterAsyncReducer,
     getFilterByIdAsyncReducer,
     updateFilterAsyncReducer
 }

@@ -1,5 +1,6 @@
 import { useField } from 'formik';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
+import { FieldError } from '../field-error/field-error';
 import { Select } from "./select";
 
 interface Props extends PropsOf<typeof Select> {
@@ -7,9 +8,9 @@ interface Props extends PropsOf<typeof Select> {
 }
 
 export function SelectField({ name, ...props }: Props) {
-    const [{ value }, , { setValue }] = useField(name)
+    const [{ value, ...p }, { error, touched }, { setValue, setTouched }] = useField(name)
 
-    console.log(name, value)
+    const hasError = Boolean(error && touched)
 
     const selectedOption = useMemo(() => {
         if (value && props.options?.length) {
@@ -18,12 +19,21 @@ export function SelectField({ name, ...props }: Props) {
         return null;
     }, [value, props.options])
 
+    const setFieldValue = useCallback((opt: unknown) => {
+        setValue((opt as { value: string | number })?.value ?? null)
+    }, [setValue])
+
     return (
-        <Select
-            {...props}
-            value={selectedOption}
-            defaultValue={selectedOption}
-            onChange={(opt: unknown) => setValue((opt as { value: string | number })?.value ?? null)}
-        />
+        <FieldError touched={touched} error={error}>
+            <Select
+                {...p}
+                onBlur={() => setTouched(true)}
+                {...props}
+                hasError={hasError}
+                value={selectedOption}
+                defaultValue={selectedOption}
+                onChange={setFieldValue}
+            />
+        </FieldError>
     )
 }
